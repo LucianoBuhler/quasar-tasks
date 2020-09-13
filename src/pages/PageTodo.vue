@@ -3,6 +3,7 @@
 
     <div class="row q-mb-lg">
       <search />
+      <sort />
     </div>
 
     <p v-if="search 
@@ -68,7 +69,8 @@
       'tasks-todo': () => import('components/Tasks/TasksTodo.vue'),
       'tasks-completed': () => import('components/Tasks/TasksCompleted.vue'),
       'no-tasks': () => import('components/Tasks/NoTasks.vue'),
-      'search': require('components/Tasks/Tools/Search.vue').default
+      'search': require('components/Tasks/Tools/Search.vue').default,
+      'sort': require('components/Tasks/Tools/Sort.vue').default
     }
   }
 </script>
