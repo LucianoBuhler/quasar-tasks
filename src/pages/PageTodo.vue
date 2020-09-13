@@ -26,9 +26,9 @@
       />
     </div>
 
-      <q-dialog v-model="showAddTaskDialog">
-        <add-task @close="showAddTaskDialog = false" />>
-      </q-dialog>
+    <q-dialog v-model="showAddTaskDialog">
+      <add-task @close="showAddTaskDialog = false" />>
+    </q-dialog>
   </q-page>
 </template>
 
