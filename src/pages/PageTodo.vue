@@ -1,20 +1,23 @@
 <template>
-  <!-- <q-page class="flex flex-center"> -->
   <q-page class="q-pa-md">
-    <q-list 
-      v-if="Object.keys(tasks).length"
-      separator
-      bordered
-    >
+    
+    <!-- Todo Tasks -->
+    <tasks-todo
+      v-if="Object.keys(tasksTodo).length"
+      :tasksTodo="tasksTodo"
+    ></tasks-todo>
 
-      <task
-        v-for="(task, key) in tasks"
-        :key="key"
-        :task="task"
-        :id="key"
-      />
+    <!-- No Todo Tasks -->
+    <no-tasks
+      v-else
+      @showAddTask="showAddTaskDialog = true"
+    />
 
-    </q-list>
+    <!-- Completed Tasks -->
+    <tasks-completed
+      v-if="Object.keys(tasksCompleted).length"
+      :tasksCompleted="tasksCompleted"  
+    ></tasks-completed>
 
     <div class="absolute-bottom text-center q-mb-lg">
       <q-btn
@@ -27,7 +30,7 @@
     </div>
 
     <q-dialog v-model="showAddTaskDialog">
-      <add-task @close="showAddTaskDialog = false" />>
+      <add-task @close="showAddTaskDialog = false" />
     </q-dialog>
   </q-page>
 </template>
@@ -41,11 +44,20 @@
       }
     },
     computed: {
-      ...mapGetters('tasks', ['tasks'])
+      ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted'])
+    },
+    mounted() {
+      // listen for an event
+      this.$root.$on('showAddTask', () => {
+        this.showAddTaskDialog = true
+      })
+
     },
     components: {
-      'task': require('components/Tasks/Task.vue').default,
-      'add-task': require('components/Tasks/Modals/AddTask.vue').default
+      'add-task': require('components/Tasks/Modals/AddTask.vue').default,
+      'tasks-todo': () => import('components/Tasks/TasksTodo.vue'),
+      'tasks-completed': () => import('components/Tasks/TasksCompleted.vue'),
+      'no-tasks': () => import('components/Tasks/NoTasks.vue'),
     }
   }
 </script>

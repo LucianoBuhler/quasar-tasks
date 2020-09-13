@@ -110,7 +110,7 @@
       }
     },
     components: {
-      'edit-task': require('components/Tasks/Modals/EditTask').default
+      'edit-task': () => import('components/Tasks/Modals/EditTask')
     }
   }
 </script>
