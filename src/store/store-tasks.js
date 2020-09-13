@@ -13,7 +13,7 @@ const state = {
       name: 'Get bananas',
       completed: false,
       dueDate: '2020/03/10',
-      dueTime: '15300'
+      dueTime: '15:45'
     },
     'ID3': {
       name: 'Get apples',
@@ -22,6 +22,60 @@ const state = {
       dueTime: '18:30'
     },
     'ID4': {
+      name: 'Get oranges',
+      completed: false,
+      dueDate: '2020/03/12',
+      dueTime: '20:30'
+    },
+    'ID5': {
+      name: 'Get bananas',
+      completed: false,
+      dueDate: '2020/03/10',
+      dueTime: '15:45'
+    },
+    'ID6': {
+      name: 'Get apples',
+      completed: false,
+      dueDate: '2020/03/11',
+      dueTime: '18:30'
+    },
+    'ID7': {
+      name: 'Get oranges',
+      completed: false,
+      dueDate: '2020/03/12',
+      dueTime: '20:30'
+    },
+    'ID8': {
+      name: 'Get bananas',
+      completed: false,
+      dueDate: '2020/03/10',
+      dueTime: '15:45'
+    },
+    'ID9': {
+      name: 'Get apples',
+      completed: false,
+      dueDate: '2020/03/11',
+      dueTime: '18:30'
+    },
+    'ID10': {
+      name: 'Get oranges',
+      completed: false,
+      dueDate: '2020/03/12',
+      dueTime: '20:30'
+    },
+    'ID11': {
+      name: 'Get bananas',
+      completed: false,
+      dueDate: '2020/03/10',
+      dueTime: '15:45'
+    },
+    'ID12': {
+      name: 'Get apples',
+      completed: false,
+      dueDate: '2020/03/11',
+      dueTime: '18:30'
+    },
+    'ID13': {
       name: 'Get oranges',
       completed: false,
       dueDate: '2020/03/12',

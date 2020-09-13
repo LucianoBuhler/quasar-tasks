@@ -1,47 +1,55 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page>
 
-    <div class="row q-mb-lg">
-      <search />
-      <sort />
+    <div class="q-pa-md absolute full-width full-height column">
+      <div class="row q-mb-lg">
+        <search />
+        <sort />
+      </div>
+
+      <p v-if="search 
+        && !Object.keys(tasksTodo).length 
+        && !Object.keys(tasksCompleted).length"
+      >No search Results</p>
+      
+      <!-- <div class="relative-position"> -->
+      <q-scroll-area class="q-scroll-area-tasks">
+        <!-- No Todo Tasks -->
+        <no-tasks
+          v-if="!Object.keys(tasksTodo).length && !search"
+          @showAddTask="showAddTaskDialog = true"
+        />
+
+        <!-- Todo Tasks -->
+        <tasks-todo
+          v-if="Object.keys(tasksTodo).length"
+          :tasksTodo="tasksTodo"
+        ></tasks-todo>
+
+        <!-- Completed Tasks -->
+        <tasks-completed
+          v-if="Object.keys(tasksCompleted).length"
+          :tasksCompleted="tasksCompleted" 
+          class="q-mb-xl"
+        ></tasks-completed>
+      </q-scroll-area>
+      
+
+      <div class="absolute-bottom text-center q-mb-lg no-pointer-events">
+        <q-btn
+          @click="showAddTaskDialog = true"
+          round
+          class="all-pointer-events"
+          color="primary"
+          size="24px"
+          icon="add"
+        />
+      </div>
+
+      <q-dialog v-model="showAddTaskDialog">
+        <add-task @close="showAddTaskDialog = false" />
+      </q-dialog>
     </div>
-
-    <p v-if="search 
-      && !Object.keys(tasksTodo).length 
-      && !Object.keys(tasksCompleted).length"
-    >No search Results</p>
-    
-    <!-- No Todo Tasks -->
-    <no-tasks
-      v-if="!Object.keys(tasksTodo).length && !search"
-      @showAddTask="showAddTaskDialog = true"
-    />
-
-    <!-- Todo Tasks -->
-    <tasks-todo
-      v-if="Object.keys(tasksTodo).length"
-      :tasksTodo="tasksTodo"
-    ></tasks-todo>
-
-    <!-- Completed Tasks -->
-    <tasks-completed
-      v-if="Object.keys(tasksCompleted).length"
-      :tasksCompleted="tasksCompleted"  
-    ></tasks-completed>
-
-    <div class="absolute-bottom text-center q-mb-lg">
-      <q-btn
-        @click="showAddTaskDialog = true"
-        round
-        color="primary"
-        size="24px"
-        icon="add"
-      />
-    </div>
-
-    <q-dialog v-model="showAddTaskDialog">
-      <add-task @close="showAddTaskDialog = false" />
-    </q-dialog>
   </q-page>
 </template>
 
@@ -74,4 +82,11 @@
     }
   }
 </script>
+
+<style>
+  .q-scroll-area-tasks {
+    display: flex;
+    flex-grow: 1;
+  }
+</style>
 
