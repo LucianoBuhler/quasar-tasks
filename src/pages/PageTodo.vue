@@ -1,17 +1,26 @@
 <template>
   <q-page class="q-pa-md">
+
+    <div class="row q-mb-lg">
+      <search />
+    </div>
+
+    <p v-if="search 
+      && !Object.keys(tasksTodo).length 
+      && !Object.keys(tasksCompleted).length"
+    >No search Results</p>
     
+    <!-- No Todo Tasks -->
+    <no-tasks
+      v-if="!Object.keys(tasksTodo).length && !search"
+      @showAddTask="showAddTaskDialog = true"
+    />
+
     <!-- Todo Tasks -->
     <tasks-todo
       v-if="Object.keys(tasksTodo).length"
       :tasksTodo="tasksTodo"
     ></tasks-todo>
-
-    <!-- No Todo Tasks -->
-    <no-tasks
-      v-else
-      @showAddTask="showAddTaskDialog = true"
-    />
 
     <!-- Completed Tasks -->
     <tasks-completed
@@ -36,7 +45,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
   export default {
     data() {
       return {
@@ -44,7 +53,8 @@
       }
     },
     computed: {
-      ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted'])
+      ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted']),
+      ...mapState('tasks', ['search'])
     },
     mounted() {
       // listen for an event
@@ -58,6 +68,7 @@
       'tasks-todo': () => import('components/Tasks/TasksTodo.vue'),
       'tasks-completed': () => import('components/Tasks/TasksCompleted.vue'),
       'no-tasks': () => import('components/Tasks/NoTasks.vue'),
+      'search': require('components/Tasks/Tools/Search.vue').default
     }
   }
 </script>
