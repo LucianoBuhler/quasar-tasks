@@ -16,7 +16,9 @@
       <q-scroll-area class="q-scroll-area-tasks">
         <!-- No Todo Tasks -->
         <no-tasks
-          v-if="!Object.keys(tasksTodo).length && !search"
+          v-if="!Object.keys(tasksTodo).length 
+            && !search
+            && !settings.showTasksInOneList"
           @showAddTask="showAddTaskDialog = true"
         />
 
@@ -63,6 +65,7 @@
     },
     computed: {
       ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted']),
+      ...mapGetters('settings', ['settings']),
       ...mapState('tasks', ['search'])
     },
     mounted() {
