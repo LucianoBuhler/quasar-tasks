@@ -50,14 +50,14 @@ const mutations = {
 
 // can be async
 const actions = {
-  updateTask({ commit }, payload) {
-    commit('updateTask', payload)
+  updateTask({ dispatch }, payload) {
+    dispatch('fbUpdateTask', payload)
   },
-  deleteTask( { commit }, id) {
+  deleteTask( { dispatch }, id) {
     console.log('Store - action - deleteTask - id: ', id);
-    commit('deleteTask', id)
+    dispatch('fbDeleteTask', id)
   },
-  addTask({ commit }, task) {
+  addTask({ dispatch }, task) {
     let taskId = uid()
 
     let payload = {
@@ -65,7 +65,7 @@ const actions = {
       task: task
     }
 
-    commit('addTask', payload)
+    dispatch('fbAddTask', payload)
   },
   setSearch({ commit }, value) {
     commit('setSearch', value)
@@ -74,7 +74,6 @@ const actions = {
     commit('setSort', value)
   },
   fbReadData({ commit }) {
-    console.log('[store-tasks] - fbReadData...');
     const userId = firebaseAuth.currentUser.uid
     let userTasks = firebaseDb.ref('tasks/' + userId)
 
@@ -106,7 +105,23 @@ const actions = {
 
       commit('deleteTask', taskId)
     })
+  },
+  fbAddTask({}, payload) {
+    const userId = firebaseAuth.currentUser.uid
+    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + payload.id)
+    taskRef.set(payload.task)
+  },
+  fbUpdateTask({}, payload) {
+    const userId = firebaseAuth.currentUser.uid
+    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + payload.id)
+    taskRef.update(payload.updates)
+  },
+  fbDeleteTask({}, taskId) {
+    const userId = firebaseAuth.currentUser.uid
+    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + taskId)
+    taskRef.remove()
   }
+
 }
 
 const getters = {
