@@ -1,85 +1,26 @@
 import Vue from 'vue'
 import { uid } from 'quasar'
+import { firebaseDb, firebaseAuth } from 'boot/firebase'
 
 const state = {
   tasks: {
-    'ID1': {
-      name: 'Go to shop',
-      completed: false,
-      dueDate: '2020/03/09',
-      dueTime: '10:00'
-    },
-    'ID2': {
-      name: 'Get bananas',
-      completed: false,
-      dueDate: '2020/03/10',
-      dueTime: '15:45'
-    },
-    'ID3': {
-      name: 'Get apples',
-      completed: false,
-      dueDate: '2020/03/11',
-      dueTime: '18:30'
-    },
-    // 'ID4': {
-    //   name: 'Get oranges',
+    // 'ID1': {
+    //   name: 'Go to shop',
     //   completed: false,
-    //   dueDate: '2020/03/12',
-    //   dueTime: '20:30'
+    //   dueDate: '2020/03/09',
+    //   dueTime: '10:00'
     // },
-    // 'ID5': {
+    // 'ID2': {
     //   name: 'Get bananas',
     //   completed: false,
     //   dueDate: '2020/03/10',
     //   dueTime: '15:45'
     // },
-    // 'ID6': {
+    // 'ID3': {
     //   name: 'Get apples',
     //   completed: false,
     //   dueDate: '2020/03/11',
     //   dueTime: '18:30'
-    // },
-    // 'ID7': {
-    //   name: 'Get oranges',
-    //   completed: false,
-    //   dueDate: '2020/03/12',
-    //   dueTime: '20:30'
-    // },
-    // 'ID8': {
-    //   name: 'Get bananas',
-    //   completed: false,
-    //   dueDate: '2020/03/10',
-    //   dueTime: '15:45'
-    // },
-    // 'ID9': {
-    //   name: 'Get apples',
-    //   completed: false,
-    //   dueDate: '2020/03/11',
-    //   dueTime: '18:30'
-    // },
-    // 'ID10': {
-    //   name: 'Get oranges',
-    //   completed: false,
-    //   dueDate: '2020/03/12',
-    //   dueTime: '20:30'
-    // },
-    // 'ID11': {
-    //   name: 'Get bananas',
-    //   completed: false,
-    //   dueDate: '2020/03/10',
-    //   dueTime: '15:45'
-    // },
-    // 'ID12': {
-    //   name: 'Get apples',
-    //   completed: false,
-    //   dueDate: '2020/03/11',
-    //   dueTime: '18:30'
-    // },
-    // 'ID13': {
-    //   name: 'Get oranges',
-    //   completed: false,
-    //   dueDate: '2020/03/12',
-    //   dueTime: '20:30'
     // }
   },
   search: '',
@@ -131,6 +72,40 @@ const actions = {
   },
   setSort({ commit }, value) {
     commit('setSort', value)
+  },
+  fbReadData({ commit }) {
+    console.log('[store-tasks] - fbReadData...');
+    const userId = firebaseAuth.currentUser.uid
+    let userTasks = firebaseDb.ref('tasks/' + userId)
+
+    // child added
+    userTasks.on('child_added', snapshot => {
+      let task = snapshot.val()
+      let payload = {
+        id: snapshot.key,
+        task: task
+      }
+
+      commit('addTask', payload)
+    })
+
+    // child changed
+    userTasks.on('child_changed', snapshot => {
+      let task = snapshot.val()
+      let payload = {
+        id: snapshot.key,
+        updates: task
+      }
+
+      commit('updateTask', payload)
+    })
+
+    // child deleted
+    userTasks.on('child_removed', snapshot => {
+      let taskId = snapshot.key
+
+      commit('deleteTask', taskId)
+    })
   }
 }
 

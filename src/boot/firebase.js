@@ -1,6 +1,7 @@
 var firebase = require("firebase/app");
 
 require("firebase/auth")
+require("firebase/database")
 
 let firebaseConfig = {
   apiKey: process.env.FIREBASE_APIKEY,
@@ -17,5 +18,6 @@ let firebaseApp = firebase.initializeApp(firebaseConfig);
 // firebase.analytics();
 
 let firebaseAuth = firebaseApp.auth()
+let firebaseDb = firebaseApp.database()
 
-export { firebaseAuth }
+export { firebaseAuth, firebaseDb }
