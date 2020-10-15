@@ -2,56 +2,69 @@
   <q-page>
 
     <div class="q-pa-md absolute full-width full-height column">
-      <div class="row q-mb-lg">
-        <search />
-        <sort />
-      </div>
+      <template v-if="tasksDownloaded">
+        <div class="row q-mb-lg">
+          <search />
+          <sort />
+        </div>
 
-      <p v-if="search 
-        && !Object.keys(tasksTodo).length 
-        && !Object.keys(tasksCompleted).length"
-      >No search Results</p>
-      
-      <!-- <div class="relative-position"> -->
-      <q-scroll-area class="q-scroll-area-tasks">
-        <!-- No Todo Tasks -->
-        <no-tasks
-          v-if="!Object.keys(tasksTodo).length 
-            && !search
-            && !settings.showTasksInOneList"
-          @showAddTask="showAddTaskDialog = true"
-        />
+        <p v-if="search 
+          && !Object.keys(tasksTodo).length 
+          && !Object.keys(tasksCompleted).length"
+        >No search Results</p>
+        
+        <!-- <div class="relative-position"> -->
+        <q-scroll-area class="q-scroll-area-tasks">
+          <!-- No Todo Tasks -->
+          <no-tasks
+            v-if="!Object.keys(tasksTodo).length 
+              && !search
+              && !settings.showTasksInOneList"
+            @showAddTask="showAddTaskDialog = true"
+          />
 
-        <!-- Todo Tasks -->
-        <tasks-todo
-          v-if="Object.keys(tasksTodo).length"
-          :tasksTodo="tasksTodo"
-        ></tasks-todo>
+          <!-- Todo Tasks -->
+          <tasks-todo
+            v-if="Object.keys(tasksTodo).length"
+            :tasksTodo="tasksTodo"
+          ></tasks-todo>
 
-        <!-- Completed Tasks -->
-        <tasks-completed
-          v-if="Object.keys(tasksCompleted).length"
-          :tasksCompleted="tasksCompleted" 
-          class="q-mb-xl"
-        ></tasks-completed>
-      </q-scroll-area>
-      
+          <!-- Completed Tasks -->
+          <tasks-completed
+            v-if="Object.keys(tasksCompleted).length"
+            :tasksCompleted="tasksCompleted" 
+            class="q-mb-xl"
+          ></tasks-completed>
+        </q-scroll-area>
+        
 
-      <div class="absolute-bottom text-center q-mb-lg no-pointer-events">
-        <q-btn
-          @click="showAddTaskDialog = true"
-          round
-          class="all-pointer-events"
-          color="primary"
-          size="24px"
-          icon="add"
-        />
-      </div>
+        <div class="absolute-bottom text-center q-mb-lg no-pointer-events">
+          <q-btn
+            @click="showAddTaskDialog = true"
+            round
+            class="all-pointer-events"
+            color="primary"
+            size="24px"
+            icon="add"
+          />
+        </div>
 
-      <q-dialog v-model="showAddTaskDialog">
-        <add-task @close="showAddTaskDialog = false" />
-      </q-dialog>
+      </template>
+
+      <template v-else>
+        <span class="absolute-center">
+          <q-spinner-gears
+            color="primary"
+            size="5em"
+          />
+        </span>
+      </template>
+
     </div>
+
+    <q-dialog v-model="showAddTaskDialog">
+      <add-task @close="showAddTaskDialog = false" />
+    </q-dialog>
   </q-page>
 </template>
 
@@ -66,14 +79,13 @@
     computed: {
       ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted']),
       ...mapGetters('settings', ['settings']),
-      ...mapState('tasks', ['search'])
+      ...mapState('tasks', ['search', 'tasksDownloaded'])
     },
     mounted() {
       // listen for an event
       this.$root.$on('showAddTask', () => {
         this.showAddTaskDialog = true
       })
-
     },
     components: {
       'add-task': require('components/Tasks/Modals/AddTask.vue').default,
