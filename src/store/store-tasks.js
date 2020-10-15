@@ -33,13 +33,16 @@ const mutations = {
   updateTask(state, payload) {
     Object.assign(state.tasks[payload.id], payload.updates )
   },
-  deleteTask(state, id){
+  deleteTask(state, id) {
     console.log('Store - mutation - deleteTask - id: ', id);
     Vue.delete(state.tasks, id)
   },
   addTask(state, payload) {
     console.log('Store - mutation - addTask - payload: ', payload);
     Vue.set(state.tasks, payload.id, payload.task)
+  },
+  clearTasks(state) {
+    state.tasks = {}
   },
   setSearch(state, value) {
     state.search = value
@@ -84,6 +87,8 @@ const actions = {
     // initial check for data
     userTasks.once('value', snapshot => {
       commit('setTasksDownloaded', true)
+    }, error => {
+      console.log('error.message: ', error.message);
     })
 
     // child added
