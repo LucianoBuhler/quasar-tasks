@@ -5,7 +5,7 @@
         <template v-slot:avatar>
           <q-icon name="account_circle" color="primary" />
         </template>
-        {{ tab | titleCase }} to access your Todos anywhere!
+        {{ titleCase(tab) }} to access your Todos anywhere!
       </q-banner>
     </div>
     <div class="row q-mb-md">
@@ -76,10 +76,9 @@
       isValidEmailAddress(email) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
-      }
-    },
-    filters: {
+      },
       titleCase(value) {
+        if (!value) return ''
         return value.charAt(0).toUpperCase() + value.slice(1)
       }
     }

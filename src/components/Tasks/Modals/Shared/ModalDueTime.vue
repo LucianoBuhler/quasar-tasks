@@ -3,14 +3,15 @@
     <q-input
       outlined
       label="Due Time"
-      :value="dueTime"
-      @input="$emit('update:dueTime', $event)"
+      :model-value="dueTime"
+      @update:model-value="updateDueTime"
+      mask="time"
       class="col"
     >
       <template v-slot:append>
         <q-icon
           v-if="dueTime"
-          @click="$emit('update:dueTime', '')"
+          @click="clearTime"
           name="cancel"
           class="cursor-pointer"
         />
@@ -21,8 +22,8 @@
         >
           <q-popup-proxy transition-show="scale" transition-hide="scale">
             <q-time
-              :value="dueTime"
-              @input="$emit('update:dueTime', $event)"
+              :model-value="dueTime"
+              @update:model-value="updateDueTime"
             >
             </q-time>
           </q-popup-proxy>
@@ -33,9 +34,28 @@
 </template>
 
 <script>
-  export default {
-    props: ['dueTime']
-  }
+  import { defineComponent } from 'vue'
+
+  export default defineComponent({
+    name: 'TimeInput',
+    props: {
+      dueTime: {
+        type: String,
+        default: ''
+      }
+    },
+    emits: ['update:dueTime'],
+    methods: {
+      updateDueTime(value) {
+        console.log("updateDueTime value: ", value);
+
+        this.$emit('update:dueTime', value)
+      },
+      clearTime(){
+        this.$emit('update:dueTime', '')
+      }
+    }
+  })
 </script>
 
 <style lang="scss" scoped>

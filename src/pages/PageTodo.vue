@@ -69,7 +69,9 @@
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue';
   import { mapGetters, mapState } from 'vuex'
+  import eventBus from 'boot/event-bus'
   export default {
     data() {
       return {
@@ -83,17 +85,17 @@
     },
     mounted() {
       // listen for an event
-      this.$root.$on('showAddTask', () => {
+      eventBus.$on('showAddTask', () => {
         this.showAddTaskDialog = true
       })
     },
     components: {
       'add-task': require('components/Tasks/Modals/AddTask.vue').default,
-      'tasks-todo': () => import('components/Tasks/TasksTodo.vue'),
-      'tasks-completed': () => import('components/Tasks/TasksCompleted.vue'),
-      'no-tasks': () => import('components/Tasks/NoTasks.vue'),
       'search': require('components/Tasks/Tools/Search.vue').default,
-      'sort': require('components/Tasks/Tools/Sort.vue').default
+      'sort': require('components/Tasks/Tools/Sort.vue').default,
+      'tasks-todo': defineAsyncComponent(() => import('components/Tasks/TasksTodo.vue')),
+      'tasks-completed': defineAsyncComponent (() => import('components/Tasks/TasksCompleted.vue')),
+      'no-tasks': defineAsyncComponent (() => import('components/Tasks/NoTasks.vue'))
     }
   }
 </script>

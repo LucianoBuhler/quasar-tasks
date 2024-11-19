@@ -1,9 +1,19 @@
-var firebase = require("firebase/app");
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { 
+  getDatabase, 
+  ref, 
+  get, 
+  set,
+  update,
+  remove,
+  onValue, 
+  onChildAdded, 
+  onChildChanged, 
+  onChildRemoved 
+} from 'firebase/database';
 
-require("firebase/auth")
-require("firebase/database")
-
-let firebaseConfig = {
+const firebaseConfig = {
   apiKey: process.env.FIREBASE_APIKEY,
   authDomain: process.env.FIREBASE_AUTHDOMAIN,
   databaseURL: process.env.FIREBASE_DATABASEURL,
@@ -14,10 +24,26 @@ let firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENTID,
 };
 
-let firebaseApp = firebase.initializeApp(firebaseConfig);
+// let firebaseApp = firebase.initializeApp(firebaseConfig);
 // firebase.analytics();
 
-let firebaseAuth = firebaseApp.auth()
-let firebaseDb = firebaseApp.database()
+const firebaseApp = initializeApp(firebaseConfig);
 
-export { firebaseAuth, firebaseDb }
+const firebaseAuth = getAuth(firebaseApp);
+const firebaseDb = getDatabase(firebaseApp);
+
+export { 
+  firebaseAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  firebaseDb, 
+  ref, 
+  get, 
+  set,
+  update,
+  remove, 
+  onValue, 
+  onChildAdded, 
+  onChildChanged, 
+  onChildRemoved 
+}

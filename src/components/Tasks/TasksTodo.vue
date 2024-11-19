@@ -28,6 +28,7 @@
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue';
   import { mapGetters } from 'vuex'
 
   export default {
@@ -36,7 +37,7 @@
       ...mapGetters('settings', ['settings'])
     },
     components: {
-      'task': () => import('components/Tasks/Task.vue'),
+      'task': defineAsyncComponent(() => import('components/Tasks/Task.vue')),
       'list-header': require('components/Shared/ListHeader.vue').default
     }
   }

@@ -3,11 +3,6 @@
     
     <modal-header>Add Task</modal-header>
 
-    <!-- <q-form
-      @submit.prevent="submitForm"
-      class="q-gutter-md"
-      ref="taskForm"
-    > -->
     <q-form
       @submit.prevent="submitForm"
       class="q-gutter-md"
@@ -17,27 +12,23 @@
         <q-card-section class="q-pt-none">
          
          <modal-task-name
-           :name.sync="taskToSubmit.name"
+           v-model:name="taskToSubmit.name"
            ref="modalTaskName"
          />
 
           <modal-due-date
-            :dueDate.sync="taskToSubmit.dueDate"
+            v-model:dueDate="taskToSubmit.dueDate"
             @clear="clearDueDate"
           />
 
           <modal-due-time 
             v-if="taskToSubmit.dueDate"
-            :dueTime.sync="taskToSubmit.dueTime"
+            v-model:dueTime="taskToSubmit.dueTime"
           />
 
         </q-card-section>
 
         <modal-buttons />
-
-        <!-- <pre>{{ taskToSubmit }}</pre> -->
-        <!-- <q-btn label="Submit" type="submit" color="primary"/>
-        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" /> -->
       </div>
     </q-form>
     

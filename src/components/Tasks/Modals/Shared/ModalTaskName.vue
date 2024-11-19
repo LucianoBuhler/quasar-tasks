@@ -2,12 +2,12 @@
   <div class="row q-mb-sm">
     <q-input
       outlined
-      :value="name"
-      @input="$emit('update:name', $event)"
+      :model-value="name"
+      @update:model-value="updateName"
       :rules="[val => !!val || 'Field is required']"
       autofocus
       v-select-all
-      ref="name"
+      ref="nameInput"
       label="Task Name"
       class="col"
       clearable
@@ -16,16 +16,33 @@
 </template>
 
 <script>
-  import { selectAll } from 'src/directives/directive-select-all'
+import { ref } from 'vue';
+import { selectAll } from 'src/directives/directive-select-all';
 
-  export default {
-    props: ['name'],
-    directives: {
-      // select all text in field field when focus and it's not empty
-      // v-select-all
-      selectAll
+export default {
+  name: 'TaskInput',
+  props: {
+    name: {
+      type: String,
+      default: ''
     }
+  },
+  directives: {
+    selectAll
+  },
+  setup(props, { emit }) {
+    const nameInput = ref(null);
+
+    const updateName = (newValue) => {
+      emit('update:name', newValue);
+    };
+
+    return {
+      nameInput,
+      updateName
+    };
   }
+};
 </script>
 
 <style lang="scss" scoped>

@@ -8,7 +8,7 @@
   >
     <q-item-section side top>
       <q-checkbox 
-        :value="task.completed" 
+        v-model="task.completed" 
         class="no-pointer-events"
       />
     </q-item-section>
@@ -16,7 +16,7 @@
     <q-item-section>
       <q-item-label
         :class="{ 'text-strikethrough' : task.completed }"
-        v-html="$options.filters.searchHighlight(task.name, search)"
+        v-html="searchHighlight(task.name, search)"
       >
       </q-item-label>
     </q-item-section>
@@ -38,7 +38,7 @@
             class="row justify-end"
             caption
           >
-            {{ task.dueDate | niceDate }}
+            {{ niceDate(task.dueDate) }}
           </q-item-label>
           <q-item-label 
             class="row justify-end"
@@ -85,9 +85,8 @@
 
 <script>
   import { mapState, mapActions, mapGetters } from 'vuex'
-  // we import all of `date`
+  import { defineAsyncComponent } from 'vue';
   import { date } from 'quasar'
-  // destructuring to keep only what is needed
   const { formatDate } = date
 
   export default {
@@ -127,23 +126,21 @@
       },
       editTask(id) {
         console.log('Task - editTask - id: ', id);
-      }
-    },
-    filters: {
+      },
       niceDate(value) {
         return formatDate(value, 'MMM D')
       },
       searchHighlight(value, search) {
-        if (search) {
-          let searchRegex = new RegExp(search, 'ig')
-          return value.replace(searchRegex, (match) => '<span class="bg-yellow-6">' + match + '</span>')
+        if (!search) {
+          return value
         }
 
-        return value
+        const searchRegex = new RegExp(search, 'ig')
+        return value.replace(searchRegex, (match) => '<span class="bg-yellow-6">' + match + '</span>')
       }
     },
     components: {
-      'edit-task': () => import('components/Tasks/Modals/EditTask')
+      'edit-task': defineAsyncComponent (() => import('components/Tasks/Modals/EditTask'))
     }
   }
 </script>

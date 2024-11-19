@@ -1,5 +1,5 @@
 import { LocalStorage, Loading } from 'quasar'
-import { firebaseAuth } from 'boot/firebase'
+import { firebaseAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'boot/firebase'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 
 const state = {
@@ -13,34 +13,52 @@ const mutations = {
 }
 
 const actions = {
-  registerUser({}, payload) {
+  // registerUser({}, payload) {
+  //   console.log('register user payload: ', payload);
+  //   Loading.show()
+
+  //   firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
+  //   .then(response => {
+  //     console.log('Firebase auth response ', response);
+  //   })
+  //   .catch(error => {
+  //     console.log('Firebase auth error.message: ', error.message);
+  //     showErrorMessage(error.message)
+  //   })
+  // },
+  async registerUser({}, payload) {
     console.log('register user payload: ', payload);
     Loading.show()
 
-    firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
-    .then(response => {
-      console.log('Firebase auth response ', response);
-
-    })
-    .catch(error => {
+    try {
+      const response = await createUserWithEmailAndPassword(firebaseAuth, payload.email, payload.password)
+      console.log('Firebase registration response ', response);
+    } catch (error) {
       console.log('Firebase auth error.message: ', error.message);
       showErrorMessage(error.message)
-    })
+    } finally {
+      Loading.hide();
+    }
 
+    // firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
+    // .then(response => {
+    //   console.log('Firebase auth response ', response);
+    // })
+    // .catch(error => {
+    // })
   },
-  loginUser({}, payload) {
+  async loginUser({}, payload) {
     Loading.show()
 
-    firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
-      .then(response => {
-        console.log('Firebase login response ', response);
-
-      })
-      .catch(error => {
-        console.log('Firebase login error.message: ', error.message);
-        showErrorMessage(error.message)
-      })
-
+    try {
+      const response = await signInWithEmailAndPassword(firebaseAuth, payload.email, payload.password);
+      console.log('Firebase login response', response);
+    } catch (error) {
+      console.log('Firebase login error.message:', error.message);
+      showErrorMessage(error.message);
+    } finally {
+      Loading.hide();
+    }
   },
   logoutUser() {
     firebaseAuth.signOut()
@@ -57,6 +75,8 @@ const actions = {
     console.log('handleAuthStateChange');
     firebaseAuth.onAuthStateChanged(user => {
       Loading.hide()
+
+      console.log("user: ", user)
 
       if (user) {
         // User is signed in.

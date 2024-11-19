@@ -11,7 +11,7 @@
       No tasks to do today!
       <template v-slot:action>
         <q-btn
-          @click="$root.$emit('showAddTask')"
+          @click="emitEvent"
           
           flat
           color="primary"
@@ -23,8 +23,13 @@
 </template>
 
 <script>
+  import eventBus from 'boot/event-bus'
   export default {
-    
+    methods: {
+      emitEvent() {
+        eventBus.$emit('showAddTask');
+      }
+    }
   }
 </script>
 

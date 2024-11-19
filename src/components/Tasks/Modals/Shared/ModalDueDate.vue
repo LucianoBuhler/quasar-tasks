@@ -3,14 +3,14 @@
     <q-input
       outlined
       label="Due Date"
-      :value="dueDate"
-      @input="$emit('update:dueDate', $event)"
+      :model-value="dueDate"
+      @update:model-value="updateDueDate"
       mask="date"
     >
       <template v-slot:append>
         <q-icon
           v-if="dueDate"
-          @click="$emit('clear')"
+          @click="clearDate"
           name="cancel"
           class="cursor-pointer"
         />
@@ -21,8 +21,8 @@
         >
         <q-popup-proxy>
           <q-date
-            :value="dueDate"
-            @input="$emit('update:dueDate', $event)"
+            :model-value="dueDate"
+            @update:model-value="updateDueDate"
           />
         </q-popup-proxy>
         </q-icon>
@@ -32,9 +32,28 @@
 </template>
 
 <script>
-  export default {
-    props: ['dueDate']
-  }
+  import { defineComponent } from 'vue';
+  export default defineComponent({
+    name: 'DateInput',
+    props: {
+      dueDate: {
+        type: String,
+        default: ''
+      }
+    },
+    emits: ['update:dueDate', 'clear'],
+    methods: {
+      updateDueDate(value) {
+        console.log("updateDueDate value: ", value);
+        
+        this.$emit('update:dueDate', value)
+      },
+      clearDate(){
+        this.$emit('update:dueDate', '')
+        this.$emit('clear')
+      }
+    }
+  })
 </script>
 
 <style lang="scss" scoped>

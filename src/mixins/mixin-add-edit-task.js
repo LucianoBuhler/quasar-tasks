@@ -3,16 +3,19 @@ export default {
     submitForm() {
       console.log('AddTask - Submit form');
       // this.$refs.taskForm.validate()
-      this.$refs.modalTaskName.$refs.name.validate()
-      console.log(this.$refs.taskForm);
+      // this.$refs.modalTaskName.$refs.name.validate()
+      this.$refs.modalTaskName.$refs.nameInput.validate()
 
       // if(!this.$refs.taskForm.hasError) {
-      if (!this.$refs.modalTaskName.$refs.name.hasError) {
+      if (!this.$refs.modalTaskName.$refs.nameInput.hasError) {
         this.submitTask()
       }
     },
     clearDueDate() {
       this.taskToSubmit.dueDate = ''
+      this.taskToSubmit.dueTime = ''
+    },
+    clearDueTime() {
       this.taskToSubmit.dueTime = ''
     }
   },

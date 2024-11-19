@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { boot } from 'quasar/wrappers';
 import axios from 'axios'
 
-Vue.prototype.$axios = axios
+export { axios };

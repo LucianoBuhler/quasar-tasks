@@ -35,6 +35,7 @@
 </template>
 
 <script>
+  import { defineAsyncComponent } from 'vue';
   export default {
     data () {
       return {
@@ -42,7 +43,7 @@
       }
     },
     components: {
-      'login-register': () => import('components/Auth/LoginRegister.vue')
+      'login-register': defineAsyncComponent(() => import('components/Auth/LoginRegister.vue'))
     }
   }
 </script>

@@ -1,6 +1,17 @@
-import Vue from 'vue'
 import { uid, Notify } from 'quasar'
-import { firebaseDb, firebaseAuth } from 'boot/firebase'
+import { 
+  firebaseDb, 
+  firebaseAuth, 
+  ref, 
+  get, 
+  set,
+  update,
+  remove,
+  onValue, 
+  onChildAdded, 
+  onChildChanged, 
+  onChildRemoved 
+} from 'boot/firebase'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 
 const state = {
@@ -11,18 +22,6 @@ const state = {
     //   dueDate: '2020/03/09',
     //   dueTime: '10:00'
     // },
-    // 'ID2': {
-    //   name: 'Get bananas',
-    //   completed: false,
-    //   dueDate: '2020/03/10',
-    //   dueTime: '15:45'
-    // },
-    // 'ID3': {
-    //   name: 'Get apples',
-    //   completed: false,
-    //   dueDate: '2020/03/11',
-    //   dueTime: '18:30'
-    // }
   },
   search: '',
   sort: 'name',
@@ -36,11 +35,12 @@ const mutations = {
   },
   deleteTask(state, id) {
     console.log('Store - mutation - deleteTask - id: ', id);
-    Vue.delete(state.tasks, id)
+    console.log('Store - mutation - deleteTask - state.tasks: ', JSON.stringify(state.tasks));
+    delete state.tasks[id] // Vue 3
   },
   addTask(state, payload) {
     console.log('Store - mutation - addTask - payload: ', payload);
-    Vue.set(state.tasks, payload.id, payload.task)
+    state.tasks[payload.id] = payload.task // Vue 3
   },
   clearTasks(state) {
     state.tasks = {}
@@ -83,19 +83,23 @@ const actions = {
   },
   fbReadData({ commit }) {
     const userId = firebaseAuth.currentUser.uid
-    let userTasks = firebaseDb.ref('tasks/' + userId)
-
+    let userTasks = ref(firebaseDb, 'tasks/' + userId) 
+    console.log("userTasks: ", userTasks);
+    
     // initial check for data
-    userTasks.once('value', snapshot => {
+    get(userTasks).then((snapshot) => {
+      console.log("snapshot: ", snapshot);
+      
       commit('setTasksDownloaded', true)
-    }, error => {
+    })
+     .catch((error) => {
       console.log('error: ', error.message);
       showErrorMessage(error.message)
       this.$router.replace('/auth')
     })
 
     // child added
-    userTasks.on('child_added', snapshot => {
+    onChildAdded(userTasks, (snapshot) => {
       let task = snapshot.val()
       let payload = {
         id: snapshot.key,
@@ -106,7 +110,7 @@ const actions = {
     })
 
     // child changed
-    userTasks.on('child_changed', snapshot => {
+    onChildChanged(userTasks, (snapshot) => {
       let task = snapshot.val()
       let payload = {
         id: snapshot.key,
@@ -117,7 +121,7 @@ const actions = {
     })
 
     // child deleted
-    userTasks.on('child_removed', snapshot => {
+    onChildRemoved(userTasks, (snapshot) => {
       let taskId = snapshot.key
 
       commit('deleteTask', taskId)
@@ -125,41 +129,41 @@ const actions = {
   },
   fbAddTask({}, payload) {
     const userId = firebaseAuth.currentUser.uid
-    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + payload.id)
-    taskRef.set(payload.task, error => {
-      if (error) {
-        console.log('error: ', error.message);
-        showErrorMessage(error.message)
-      } else {
-        Notify.create('Task added!')
-      }
+    let taskRef = ref(firebaseDb, 'tasks/' + userId + '/' + payload.id)
+    set(taskRef, payload.task)
+    .then(() => {
+      Notify.create('Task added!')
+    })
+    .catch((error)  => {
+      console.log('error: ', error.message);
+      showErrorMessage(error.message)
     })
   },
   fbUpdateTask({}, payload) {
     const userId = firebaseAuth.currentUser.uid
-    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + payload.id)
-    taskRef.update(payload.updates, error => {
-      if (error) {
-        console.log('error: ', error.message);
-        showErrorMessage(error.message)
-      } else {
-        const keys = Object.keys(payload.updates)
-        if (!(keys.includes('completed') && keys.length == 1)){
-          Notify.create('Task updated!')
-        }
+    let taskRef = ref(firebaseDb, 'tasks/' + userId + '/' + payload.id)
+    update(taskRef, payload.updates)
+    .then(() => {
+      const keys = Object.keys(payload.updates)
+      if (!(keys.includes('completed') && keys.length == 1)){
+        Notify.create('Task updated!')
       }
+    })
+    .catch((error) => {
+      console.log('error: ', error.message);
+      showErrorMessage(error.message)
     })
   },
   fbDeleteTask({}, taskId) {
     const userId = firebaseAuth.currentUser.uid
-    let taskRef = firebaseDb.ref('tasks/' + userId + '/' + taskId)
-    taskRef.remove(error => {
-      if (error) {
-        console.log('error: ', error.message);
-        showErrorMessage(error.message)
-      } else {
-        Notify.create('Task deleted!')
-      }
+    let taskRef = ref(firebaseDb, 'tasks/' + userId + '/' + taskId)
+    remove(taskRef)
+    .then(() => {
+      Notify.create('Task deleted!')
+    }).
+    catch((error) => {
+      console.log('error: ', error.message);
+      showErrorMessage(error.message)
     })
   }
 }

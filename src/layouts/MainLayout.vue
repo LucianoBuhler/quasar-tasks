@@ -45,7 +45,7 @@
       :width="250"
       show-if-above
       bordered
-      content-class="bg-primary"
+      class="bg-primary"
     >
       <q-list dark>
         <q-item-label
@@ -88,14 +88,11 @@
   const linksData = [
     {
       title: 'Tasks',
-      // caption: 'quasar.dev',
       icon: 'list',
-      // link: 'https://quasar.dev'
       link: '/'
     },
     {
       title: 'Settings',
-      // caption: 'github.com/quasarframework',
       icon: 'settings',
       link: '/settings'
     }
